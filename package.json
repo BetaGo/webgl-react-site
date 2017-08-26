@@ -9,6 +9,7 @@
     "prettier": "^1.5.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-jss": "^7.1.0",
     "react-router": "^4.1.2",
     "react-scripts": "1.0.11"
   },
@@ -23,10 +24,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "flow": "flow"
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
     "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-prettier": "^2.2.0"
   }
 }

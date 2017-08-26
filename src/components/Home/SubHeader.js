@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
-class componentName extends Component {
+class SubHeader extends Component {
   render() {
     return (
       <div>
-        <title>Title</title>
+        <i>三</i>
+        <i>%</i>
       </div>
     );
   }
 }
 
-export default componentName;
+export default SubHeader;
