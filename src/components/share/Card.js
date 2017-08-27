@@ -2,35 +2,30 @@
 
 import React from 'react';
 import injectSheet from 'react-jss';
+import classNames from 'classnames';
 
 const styles = {
   root: {
-    backgroundColor: '#242424',
-    borderLeft: '2px solid #000',
-    borderRight: '2px solid #000',
-    color: '#e5e5e5',
-    padding: 0,
-    '&hover': {
-      boxShadow: 'outset0  3px 5px #000',
-    },
-  },
-  children: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    borderLeft: `1px solid rgba(255, 255, 255, 0.12)`,
     transition: '0.3s',
-    textAlign: 'left',
+    padding: 0,
     '&:hover': {
-      transform: 'translateX(1em)',
-      boxShadow: 'outset0  3px 5px #000',
-    },
-  },
+      boxShadow: 'rgba(0,0,0,0.7) 15px 0 15px -5px',
+      zIndex: '1'
+    }
+  }
 };
 
 function Card(props) {
-  const { classes } = props;
+  const { classes, className } = props;
+  const rootClassName = classNames(className, classes.root);
   return (
-    <div className={classes.root}>
-      <div className={classes.children}>
-        {props.children}
-      </div>
+    <div className={rootClassName}>
+      {props.children}
     </div>
   );
 }

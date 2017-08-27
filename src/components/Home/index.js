@@ -6,8 +6,13 @@ import SubHeader from './SubHeader';
 
 const styles = theme => ({
   root: {
-    background: theme.background.default,
-  },
+    position: 'fixed',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-around',
+    background: theme.background.default
+  }
 });
 
 function Home(props) {
