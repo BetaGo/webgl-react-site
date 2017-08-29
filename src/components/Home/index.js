@@ -3,6 +3,10 @@ import injectSheet from 'react-jss';
 import MainHeader from './MainHeader';
 import Nav from './Nav';
 import SubHeader from './SubHeader';
+// import Moon from '../three/Moon/Moon';
+// import Laptop from '../three/Laptop/Laptop';
+import Ball from '../three/Ball/Ball';
+// import Cube from '../three/Cube/Cube';
 
 const styles = theme => ({
   root: {
@@ -22,6 +26,10 @@ function Home(props) {
       <MainHeader />
       <Nav />
       <SubHeader />
+      {/* <Moon /> */}
+      {/* <Laptop /> */}
+      <Ball />
+      {/* <Cube /> */}
     </div>
   );
 }
