@@ -29,6 +29,7 @@
     },
     "extends": [
         "prettier",
+        "prettier/flowtype",
         "plugin:flowtype/recommended",
         "react-app"
     ],
