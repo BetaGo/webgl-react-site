@@ -3,7 +3,7 @@ import injectSheet from 'react-jss';
 import MainHeader from './MainHeader';
 import Nav from './Nav';
 import SubHeader from './SubHeader';
-// import Moon from '../three/Moon/Moon';
+import Moon from '../three/Moon/Moon';
 // import Laptop from '../three/Laptop/Laptop';
 // import Ball from '../three/Ball/Ball';
 // import Cube from '../three/Cube/Cube';
@@ -39,11 +39,11 @@ function Home(props) {
       <MainHeader />
       <Nav />
       <SubHeader />
-      {/* <Moon /> */}
+      <Moon />
       {/* <Laptop /> */}
       {/* <Ball /> */}
       {/* <Cube /> */}
-      <ShowModel className={classes.model} modelConfig={modelConfig} />
+      {/* <ShowModel className={classes.model} modelConfig={modelConfig} /> */}
     </div>
   );
 }
