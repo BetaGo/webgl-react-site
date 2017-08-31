@@ -1,32 +1,15 @@
 // @flow
 const THREE = require('three');
 
-type config = {
-  element: HTMLElement,
-  isControllable: boolean,
-  modelURL: string,
-  globalLight: any,
-  primaryLight: any,
-  secondaryLight: any,
-  cameraPosition: Array<number>
-};
-
-export default function createModel({
-  element,
-  isControllable = true,
-  modelURL = '3DModels/Ball.json',
-  globalLight = 0x606060,
-  primaryLight = 0xcccccc,
-  secondaryLight = 0x909090,
-  cameraPosition = [15, 15, 15]
-}: config) {
+export default function createModel(element: HTMLElement) {
   let scene, camera, renderer;
 
-  // let directionalLight1, directionalLight2;
+  let primaryLight, secondaryLight;
   let controls;
 
   function init() {
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x242424);
 
     camera = new THREE.PerspectiveCamera(
       15,
@@ -34,41 +17,40 @@ export default function createModel({
       1,
       2000
     );
-    camera.position.set(...cameraPosition);
+    camera.position.set(0, 0, 1000);
 
     renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setSize(element.clientWidth, element.clientHeight);
     element.appendChild(renderer.domElement);
 
     // 控制器
-    if (isControllable) {
-      require('../js/controls/OrbitControls')(THREE);
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.addEventListener('change', render);
-    }
+    // require('../js/controls/OrbitControls')(THREE);
+    // controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // controls.addEventListener('change', render);
 
     // 全局环境光
-    const ambientLight1 = new THREE.AmbientLight(globalLight);
-    scene.add(ambientLight1);
+    // const ambientLight1 = new THREE.AmbientLight(0x606060);
+    // scene.add(ambientLight1);
 
     // 主平行光
-    const directionalLight1 = new THREE.DirectionalLight(primaryLight);
-    directionalLight1.position.set(1, 2, 0);
-    scene.add(directionalLight1);
+    primaryLight = new THREE.DirectionalLight(0xeeeeee, 2);
+    primaryLight.position.set(-1, 0, 0);
+    scene.add(primaryLight);
+
     // 辅助光
-    const directionalLight2 = new THREE.DirectionalLight(secondaryLight);
-    directionalLight2.position.set(-1, -1, 1);
-    scene.add(directionalLight2);
+    const secondaryLight = new THREE.DirectionalLight(0xcccccc);
+    secondaryLight.position.set(0, 50, -100);
+    scene.add(secondaryLight);
 
     // 导入 json 格式模型
     const loader = new THREE.JSONLoader();
     loader.load(
       // 资源 URL
-      modelURL,
+      '3DModels/Moon.json',
       // load 完成后的回调
       (geometry, materials) => {
         const material = materials[0];
-        material.emissive.setHex(0x181818);
+        material.emissive.setHex(0x202015);
         const object = new THREE.Mesh(geometry, material);
         scene.add(object);
       }
@@ -79,7 +61,7 @@ export default function createModel({
     // camera.position.x += (mouseX - camera.position.x) * 0.05;
     // camera.position.y += (-mouseY - camera.position.y) * 0.05;
     // camera.position.x += mouseX * 0.05;
-    camera.lookAt(scene.position);
+    // camera.lookAt(scene.position);
     renderer.render(scene, camera);
   }
 
@@ -92,9 +74,19 @@ export default function createModel({
     render();
   }
 
+  function setPrimaryLightPosition(x: number, y: number, z: number) {
+    primaryLight.position.set(x, y, z);
+  }
+
+  function setCameraPosition(x: number, y: number, z: number) {
+    camera.position.set(x, y, z);
+  }
+
   return {
     init,
     render,
-    animate
+    animate,
+    setPrimaryLightPosition,
+    setCameraPosition
   };
 }

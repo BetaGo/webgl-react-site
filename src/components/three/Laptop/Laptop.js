@@ -8,8 +8,8 @@ const styles = {
     bottom: '0px',
     left: '0px',
     right: '0px',
-    top: '0px',
-    pointerEvents: 'none'
+    top: '0px'
+    // pointerEvents: 'none',
   }
 };
 

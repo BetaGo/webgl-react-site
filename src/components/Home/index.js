@@ -7,7 +7,7 @@ import Moon from '../three/Moon/Moon';
 // import Laptop from '../three/Laptop/Laptop';
 // import Ball from '../three/Ball/Ball';
 // import Cube from '../three/Cube/Cube';
-import ShowModel from '../three/ShowModel/ShowModel';
+// import ShowModel from '../three/ShowModel/ShowModel';
 
 const styles = theme => ({
   root: {
