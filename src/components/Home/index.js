@@ -5,8 +5,9 @@ import Nav from './Nav';
 import SubHeader from './SubHeader';
 // import Moon from '../three/Moon/Moon';
 // import Laptop from '../three/Laptop/Laptop';
-import Ball from '../three/Ball/Ball';
+// import Ball from '../three/Ball/Ball';
 // import Cube from '../three/Cube/Cube';
+import ShowModel from '../three/ShowModel/ShowModel';
 
 const styles = theme => ({
   root: {
@@ -16,8 +17,20 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'space-around',
     background: theme.background.default
+  },
+  model: {
+    position: 'fixed',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px'
   }
 });
+
+const modelConfig = {
+  isControllable: true,
+  modelURL: '3DModels/Laptop_High-Polay_HP_BI_2_blend.json'
+};
 
 function Home(props) {
   const { classes } = props;
@@ -28,8 +41,9 @@ function Home(props) {
       <SubHeader />
       {/* <Moon /> */}
       {/* <Laptop /> */}
-      <Ball />
+      {/* <Ball /> */}
       {/* <Cube /> */}
+      <ShowModel className={classes.model} modelConfig={modelConfig} />
     </div>
   );
 }
