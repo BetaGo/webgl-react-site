@@ -1,39 +1,18 @@
 {
-    "parser": "babel-eslint",
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "node": true
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "sourceType": "module"
-    },
     "plugins": [
-        "prettier",
-        "flowtype"
+        "prettier"
     ],
     "rules": {
         "prettier/prettier": [
             "error",
             {
-                "singleQuote": true,
-                "parser": "flow"
+                "singleQuote": true
+                // "parser": "flow"
             }
         ]
     },
     "extends": [
         "prettier",
-        "prettier/flowtype",
-        "plugin:flowtype/recommended",
         "react-app"
-    ],
-    "settings": {
-        "flowtype": {
-            "onlyFilesWithFlowAnnotation": true
-        }
-    }
+    ]
 }
