@@ -6,13 +6,10 @@ export default function createModel(element: HTMLElement) {
 
   let primaryLight, secondaryLight;
   let controls;
-  let clock;
 
   function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x242424);
-
-    clock = new THREE.Clock();
 
     camera = new THREE.PerspectiveCamera(
       15,
@@ -87,7 +84,6 @@ export default function createModel(element: HTMLElement) {
 
   return {
     init,
-    clock,
     render,
     animate,
     setPrimaryLightPosition,

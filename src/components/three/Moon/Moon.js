@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
+import { Clock } from 'three';
 import injectSheet from 'react-jss';
 import classnames from 'classnames';
 import createMoon from './MoonThree';
@@ -28,29 +29,52 @@ class Moon extends Component {
     primaryLightZ: 0
   };
 
+  componentWillMount() {
+    this.theta = 0;
+    this.clock = new Clock();
+  }
+
   componentDidMount() {
     this.moon = createMoon(this.element);
     this.moon.init();
     this.moon.animate();
-    this.handleLightAnimate();
+    this.clock.start();
+    this.startAnimation();
   }
 
   componentWillUnmount() {
     this.moon = null;
+    this.clock = null;
+    this.theta = null;
   }
 
-  handlePrimaryLightPosition = (x, y, z) =>
-    this.setState({ primaryLightX: x, primaryLightY: y, primaryLightZ: z });
+  handlePrimaryLightPosition = (
+    primaryLightX: number,
+    primaryLightY: number,
+    primaryLightZ: number
+  ) => {
+    this.setState({ primaryLightX, primaryLightY, primaryLightZ });
+  };
 
-  handleLightAnimate = () => {
-    const time = Date.now() / 500;
-    const x = Math.sin(time);
-    const z = Math.cos(time);
+  handleCameraPosition = (
+    cameraX: number,
+    cameraY: number,
+    cameraZ: number
+  ) => {
+    this.setState({ cameraX, cameraY, cameraZ });
+  };
+
+  startAnimation = () => {
+    let delta = this.clock.getDelta();
+    const dTheta = delta * Math.PI; // 每秒转动角度 θ 为 PI， 即两秒转一周
+    this.theta = this.theta >= Math.PI * 2 ? 0 : this.theta + dTheta;
+    const x = Math.sin(this.theta);
+    const z = Math.cos(this.theta);
     this.setState({
       primaryLightX: x,
       primaryLightZ: z
     });
-    requestAnimationFrame(this.handleLightAnimate);
+    requestAnimationFrame(this.startAnimation);
   };
 
   render() {
