@@ -56,8 +56,12 @@ class SubHeader extends Component {
           <a className={classes.link} href="http://weibo.com/TrueIronMan">
             <WeiboIcon className={classes.icon} />
           </a>
-          <TwitterIcon className={classes.icon} />
-          <GitHubIcon className={classes.icon} />
+          <a className={classes.link} href="https://twitter.com/IronManGWT">
+            <TwitterIcon className={classes.icon} />
+          </a>
+          <a className={classes.link} href="https://github.com/GoWantong">
+            <GitHubIcon className={classes.icon} />
+          </a>
         </div>
       </div>
     );

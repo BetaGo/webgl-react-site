@@ -82,10 +82,16 @@ export default function createModel(element: HTMLElement) {
     camera.position.set(x, y, z);
   }
 
+  function cleanBackground() {
+    scene.background = null;
+  }
+
   return {
     init,
+    scene,
     render,
     animate,
+    cleanBackground,
     setPrimaryLightPosition,
     setCameraPosition
   };

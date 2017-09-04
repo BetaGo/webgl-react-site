@@ -29,6 +29,8 @@ class Moon extends Component {
     primaryLightZ: 0
   };
 
+  animate = window.requestAnimationFrame.bind(window);
+
   componentWillMount() {
     this.theta = 0;
     this.clock = new Clock();
@@ -40,6 +42,7 @@ class Moon extends Component {
     this.moon.animate();
     this.clock.start();
     this.startAnimation();
+    setTimeout(this.cameraAnimation, 2000);
   }
 
   componentWillUnmount() {
@@ -68,13 +71,25 @@ class Moon extends Component {
     let delta = this.clock.getDelta();
     const dTheta = delta * Math.PI; // 每秒转动角度 θ 为 PI， 即两秒转一周
     this.theta = this.theta >= Math.PI * 2 ? 0 : this.theta + dTheta;
+    this.animate = this.theta >= Math.PI * 2 ? null : this.animate;
     const x = Math.sin(this.theta);
     const z = Math.cos(this.theta);
     this.setState({
       primaryLightX: x,
       primaryLightZ: z
     });
-    requestAnimationFrame(this.startAnimation);
+    this.animate && this.animate(this.startAnimation);
+  };
+
+  cameraAnimation = () => {
+    this.moon && this.moon.cleanBackground();
+    this.setState({
+      cameraY: 66,
+      cameraZ: 360,
+      primaryLightX: 0,
+      primaryLightZ: 1,
+      done: true
+    });
   };
 
   render() {
