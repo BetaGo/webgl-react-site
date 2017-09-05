@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import injectSheet from 'react-jss';
 import Beer from 'react-icons/lib/fa/beer';
+import fadeTransition from '../HOC/fadeTransition';
 
 const styles = theme => ({
   root: {
@@ -61,4 +62,7 @@ class MainHeader extends Component {
   }
 }
 
-export default injectSheet(styles)(MainHeader);
+const styledMainHeader = injectSheet(styles)(MainHeader);
+
+export default fadeTransition()(styledMainHeader);
+// export default styledMainHeader;
