@@ -1,7 +1,7 @@
 // @flow
 const THREE = require('three');
 
-export default function createModel(element: HTMLElement) {
+export default function createModel(element: HTMLDivElement) {
   let scene, camera, renderer;
 
   let primaryLight, secondaryLight;

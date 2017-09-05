@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion';
 import { Clock } from 'three';
@@ -18,7 +20,22 @@ const styles = {
   }
 };
 
-class Moon extends Component {
+type Props = {
+  classes: Object,
+  endCameraAnimate: Function
+};
+
+type State = {
+  done: boolean,
+  cameraX: number,
+  cameraY: number,
+  cameraZ: number,
+  primaryLightX: number,
+  primaryLightY: number,
+  primaryLightZ: number
+};
+
+class Moon extends Component<Props, State> {
   state = {
     done: false,
     cameraX: 0,
@@ -31,24 +48,25 @@ class Moon extends Component {
 
   animate = window.requestAnimationFrame.bind(window);
 
+  element: ?HTMLDivElement;
+  moon: Object;
+  theta: number;
+  clock: Object;
+
   componentWillMount() {
     this.theta = 0;
     this.clock = new Clock();
   }
 
   componentDidMount() {
-    this.moon = createMoon(this.element);
-    this.moon.init();
-    this.moon.animate();
-    this.clock.start();
-    this.startAnimation();
-    setTimeout(this.cameraAnimation, 2000);
-  }
-
-  componentWillUnmount() {
-    this.moon = null;
-    this.clock = null;
-    this.theta = null;
+    if (this.element) {
+      this.moon = createMoon(this.element);
+      this.moon.init();
+      this.moon.animate();
+      this.clock.start();
+      this.startAnimation();
+      setTimeout(this.cameraAnimation, 2000); // 两秒后开始摄像机动画
+    }
   }
 
   handlePrimaryLightPosition = (
@@ -90,6 +108,7 @@ class Moon extends Component {
       primaryLightZ: 1,
       done: true
     });
+    this.props.endCameraAnimate();
   };
 
   render() {
@@ -110,9 +129,9 @@ class Moon extends Component {
     return (
       <Motion
         style={{
-          cameraX: spring(this.state.cameraX),
-          cameraY: spring(this.state.cameraY),
-          cameraZ: spring(this.state.cameraZ)
+          cameraX: spring(this.state.cameraX, { stiffness: 100, damping: 36 }),
+          cameraY: spring(this.state.cameraY, { stiffness: 100, damping: 36 }),
+          cameraZ: spring(this.state.cameraZ, { stiffness: 100, damping: 36 })
         }}
       >
         {({

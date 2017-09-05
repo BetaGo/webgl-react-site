@@ -1,4 +1,7 @@
+// @flow
+
 import React, { Component } from 'react';
+import type { ComponentType } from 'react';
 import injectSheet from 'react-jss';
 import SearchIcon from 'react-icons/lib/fa/search';
 import MenuIcon from 'react-icons/lib/md/menu';
@@ -43,7 +46,11 @@ const styles = theme => ({
   }
 });
 
-class SubHeader extends Component {
+export type Props = {
+  classes: Object
+};
+
+class SubHeader extends Component<Props> {
   render() {
     const { classes } = this.props;
     return (
