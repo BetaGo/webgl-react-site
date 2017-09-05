@@ -65,7 +65,8 @@ class Moon extends Component<Props, State> {
       this.moon.animate();
       this.clock.start();
       this.startAnimation();
-      setTimeout(this.cameraAnimation, 2000); // 两秒后开始摄像机动画
+      // setTimeout(this.cameraAnimation, 2000); // 两秒后开始摄像机动画
+      this.cameraAnimation();
     }
   }
 
@@ -108,7 +109,6 @@ class Moon extends Component<Props, State> {
       primaryLightZ: 1,
       done: true
     });
-    this.props.endCameraAnimate();
   };
 
   render() {
@@ -129,9 +129,9 @@ class Moon extends Component<Props, State> {
     return (
       <Motion
         style={{
-          cameraX: spring(this.state.cameraX, { stiffness: 100, damping: 36 }),
-          cameraY: spring(this.state.cameraY, { stiffness: 100, damping: 36 }),
-          cameraZ: spring(this.state.cameraZ, { stiffness: 100, damping: 36 })
+          cameraX: spring(this.state.cameraX, { stiffness: 20, damping: 12 }),
+          cameraY: spring(this.state.cameraY, { stiffness: 20, damping: 12 }),
+          cameraZ: spring(this.state.cameraZ, { stiffness: 20, damping: 12 })
         }}
       >
         {({
@@ -143,6 +143,7 @@ class Moon extends Component<Props, State> {
           primaryLightZ
         }) => {
           moon && moon.setCameraPosition(cameraX, cameraY, cameraZ);
+          if (cameraZ <= 365) this.props.endCameraAnimate();
           return <div className={classNames} ref={e => (this.element = e)} />;
         }}
       </Motion>

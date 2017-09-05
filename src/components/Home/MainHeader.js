@@ -44,9 +44,9 @@ const styles = theme => ({
 
 class MainHeader extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, ...others } = this.props;
     return (
-      <div className={classes.root}>
+      <div className={classes.root} {...others}>
         <div className={classes.icon}>
           <Beer /> DO GREAT THINGS.
         </div>
@@ -62,7 +62,8 @@ class MainHeader extends Component {
   }
 }
 
-const styledMainHeader = injectSheet(styles)(MainHeader);
+// const styledMainHeader = injectSheet(styles)(MainHeader);
+const animatedMainHeader = fadeTransition()(MainHeader);
 
-export default fadeTransition()(styledMainHeader);
+export default injectSheet(styles)(animatedMainHeader);
 // export default styledMainHeader;

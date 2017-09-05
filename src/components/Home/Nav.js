@@ -2,6 +2,8 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import Card from '../share/Card';
 
+import fadeTransition from '../HOC/fadeTransition';
+
 const nav = [
   {
     index: '01',
@@ -60,9 +62,9 @@ const styles = theme => ({
 });
 
 function Nav(props) {
-  const { classes } = props;
+  const { classes, ...others } = props;
   return (
-    <div className={classes.root}>
+    <div className={classes.root} {...others}>
       {nav.map(value =>
         <Card className={classes.card}>
           <div className={classes.cardContent}>
@@ -84,4 +86,6 @@ function Nav(props) {
   );
 }
 
-export default injectSheet(styles)(Nav);
+const animatedNav = fadeTransition()(Nav);
+
+export default injectSheet(styles)(animatedNav);
