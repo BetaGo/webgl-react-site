@@ -22,7 +22,8 @@ const styles = {
 
 type Props = {
   classes: Object,
-  endCameraAnimate: Function
+  endCameraAnimate: Function,
+  isCameraAnimateEnd: boolean
 };
 
 type State = {
@@ -143,7 +144,11 @@ class Moon extends Component<Props, State> {
           primaryLightZ
         }) => {
           moon && moon.setCameraPosition(cameraX, cameraY, cameraZ);
-          if (cameraZ <= 365) this.props.endCameraAnimate();
+          if (!this.props.isCameraAnimateEnd) {
+            if (cameraZ <= 365) {
+              this.props.endCameraAnimate();
+            }
+          }
           return <div className={classNames} ref={e => (this.element = e)} />;
         }}
       </Motion>

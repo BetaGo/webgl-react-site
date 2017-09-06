@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import type { ComponentType } from 'react';
-import { TransitionMotion, spring } from 'react-motion';
+import { TransitionMotion, spring, presets } from 'react-motion';
 
 type Options = {
   stiffness?: number,
@@ -10,18 +10,13 @@ type Options = {
   precision?: number
 };
 
-type Props = {};
-type State = {
-  open: boolean
-};
-
-export default function fadeTransition(options?: Options = {}) {
+export default function fadeTransition(
+  options?: Options = { ...presets.gentle, precision: 0.01 }
+) {
   const { stiffness, damping, precision } = options;
 
   function enhance(BaseComponent: ComponentType<any>) {
-    class Transition extends Component<Props, State> {
-      state = { open: false };
-
+    class Transition extends Component<any> {
       willEnter() {
         return { x: -100, opacity: 0 };
       }
@@ -33,8 +28,8 @@ export default function fadeTransition(options?: Options = {}) {
               {
                 key: 'a',
                 style: {
-                  x: spring(0, { stiffness: 60, damping: 26 }),
-                  opacity: spring(1, { stiffness: 60, damping: 36 })
+                  x: spring(0, { stiffness, damping, precision }),
+                  opacity: spring(1, { stiffness, damping, precision })
                 }
               }
             ]}

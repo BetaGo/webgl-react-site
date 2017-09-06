@@ -21,10 +21,10 @@ const styles = {
 };
 
 function Card(props) {
-  const { classes, className } = props;
-  const rootClassName = classNames(className, classes.root);
+  const { classes, className: classNameProp, ...other } = props;
+  const rootClassName = classNames(classes.root, classNameProp);
   return (
-    <div className={rootClassName}>
+    <div className={rootClassName} {...other}>
       {props.children}
     </div>
   );

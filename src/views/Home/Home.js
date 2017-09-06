@@ -5,7 +5,7 @@ import injectSheet from 'react-jss';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MainHeader from '../../components/Home/MainHeader';
-import Nav from '../../components/Home/Nav';
+import Nav from './components/Nav';
 import SubHeader from '../../components/Home/SubHeader';
 import Moon from '../../components/three/Moon/Moon';
 
@@ -39,7 +39,10 @@ function Home(props: AllProps) {
       {isCameraAnimateEnd && <MainHeader />}
       {isCameraAnimateEnd && <Nav />}
       {isCameraAnimateEnd && <SubHeader />}
-      <Moon endCameraAnimate={endCameraAnimate} />
+      <Moon
+        endCameraAnimate={endCameraAnimate}
+        isCameraAnimateEnd={isCameraAnimateEnd}
+      />
     </div>
   );
 }
