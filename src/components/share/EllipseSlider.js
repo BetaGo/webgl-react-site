@@ -15,8 +15,8 @@ type EllipseOption = {
   cy: number,
   rx: number,
   ry: number,
-  stroke?: string,
-  strokeWidth?: number
+  stroke: string,
+  strokeWidth: number
 };
 
 type AllProps = EllipseOption & Props;
@@ -25,7 +25,10 @@ type State = {
   value: number
 };
 
-const ellipsePath = (theta: number, { cx, cy, rx, ry }: EllipseOption) => {
+const ellipsePath = (
+  theta: number,
+  { cx, cy, rx, ry }: { cx: number, cy: number, rx: number, ry: number }
+) => {
   // θ(theta): 以椭圆圆心为坐标轴原点, 椭圆上的任意一点到圆心的直线 与 坐标轴x轴 的夹角.
   let x = cx + rx * Math.cos(theta);
   let y = cy + ry * Math.sin(theta);
@@ -88,11 +91,11 @@ class EllipseSlider extends Component<AllProps, State> {
     value: 90
   };
 
-  cx = null;
-  cy = null;
-  rx = null;
-  ry = null;
-  element = null;
+  cx: number;
+  cy: number;
+  rx: number;
+  ry: number;
+  element: HTMLDivElement;
 
   componentWillMount() {
     const { width, height, strokeWidth } = this.props;
