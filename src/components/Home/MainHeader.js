@@ -3,6 +3,8 @@ import injectSheet from 'react-jss';
 import Beer from 'react-icons/lib/fa/beer';
 import fadeTransition from '../HOC/fadeTransition';
 
+import MoonControlSlider from './MoonControlSlider';
+
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -55,7 +57,7 @@ class MainHeader extends Component {
           <span>the</span>
           <span>Life</span>
         </div>
-        <div>Switch | |</div>
+        <MoonControlSlider />
         <span>about</span>
       </div>
     );
