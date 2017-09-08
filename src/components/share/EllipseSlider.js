@@ -1,7 +1,7 @@
 // @flow
-
 import React, { Component } from 'react';
 import injectSheet from 'react-jss';
+import classNames from 'classnames';
 import Sunny from 'react-icons/lib/md/wb-sunny';
 
 type Props = {
@@ -22,16 +22,24 @@ type EllipseOption = {
 type AllProps = EllipseOption & Props;
 
 type State = {
-  value: number
+  value: number,
+  pointer: boolean
 };
 
+/**
+ * 
+ * @param {number} theta 
+ * @param {object} param1 
+ */
 const ellipsePath = (
   theta: number,
   { cx, cy, rx, ry }: { cx: number, cy: number, rx: number, ry: number }
 ) => {
+  // 世界坐标系为 x轴向下
+  // 椭圆坐标系为 x轴向上
   // θ(theta): 以椭圆圆心为坐标轴原点, 椭圆上的任意一点到圆心的直线 与 坐标轴x轴 的夹角.
   let x = cx + rx * Math.cos(theta);
-  let y = cy + ry * Math.sin(theta);
+  let y = cy - ry * Math.sin(theta);
   return { x, y };
 };
 
@@ -41,13 +49,13 @@ const ellipsePath = (
  * @param {MouseEvent} event 
  * @return {Object} return鼠标在该元素内的位置
  */
-const getMousePosition = (element: HTMLDivElement, event: MouseEvent) => {
-  const box = element.getBoundingClientRect();
+const getMousePosition = (e: SyntheticMouseEvent<HTMLDivElement>) => {
+  const box = e.currentTarget.getBoundingClientRect();
   const elementX = box.left + window.pageXOffset;
   const elementY = box.top + window.pageYOffset;
   return {
-    x: event.clientX - elementX,
-    y: event.clientY - elementY
+    x: e.clientX - elementX,
+    y: e.clientY - elementY
   };
 };
 
@@ -59,12 +67,12 @@ const getMousePosition = (element: HTMLDivElement, event: MouseEvent) => {
  * @param {number} cy 
  */
 const getTheta = (x: number, y: number, cx: number, cy: number) => {
-  const rx = x - cx;
-  const ry = y - cy;
-  return Math.atan2(rx, ry);
+  const ex = x - cx;
+  const ey = cy - y;
+  return Math.atan2(ey, ex);
 };
 
-const getVectorlength = (x: number, y: number) => {
+const getVectorLength = (x: number, y: number) => {
   return Math.pow(x * x + y * y, 0.5);
 };
 
@@ -76,6 +84,9 @@ const styles = {
     position: 'absolute',
     fontSize: '36px',
     transform: 'translate(-50%, -50%)'
+  },
+  hover: {
+    cursor: 'pointer'
   }
 };
 
@@ -88,14 +99,15 @@ class EllipseSlider extends Component<AllProps, State> {
   };
 
   state = {
-    value: 90
+    value: 90,
+    pointer: false
   };
 
   cx: number;
   cy: number;
   rx: number;
   ry: number;
-  element: HTMLDivElement;
+  element: ?HTMLDivElement;
 
   componentWillMount() {
     const { width, height, strokeWidth } = this.props;
@@ -105,9 +117,30 @@ class EllipseSlider extends Component<AllProps, State> {
     this.ry = height / 2 - strokeWidth;
   }
 
-  componentDidMount() {
-    // this.element.addEventListener();
-  }
+  handleMouseMove = (e: SyntheticMouseEvent<HTMLDivElement>) => {
+    const { rx, ry, cx, cy } = this;
+    const mousePosition = getMousePosition(e);
+    // console.log(`mousePosition: ${JSON.stringify(mousePosition)}`);
+    const theta = getTheta(mousePosition.x, mousePosition.y, cx, cy);
+    // console.log(`theta: ${theta}`)
+    const ellipsePosition = ellipsePath(theta, { rx, ry, cx, cy });
+    // console.log(`ellipsePosition: ${JSON.stringify(ellipsePosition)}`);
+    const lenMouse = getVectorLength(
+      mousePosition.x - cx,
+      cy - mousePosition.y
+    );
+    const lenEllipse = getVectorLength(
+      ellipsePosition.x - cx,
+      cy - ellipsePosition.y
+    );
+    const deltaLen = Math.abs(lenMouse - lenEllipse);
+    if (deltaLen < 18) {
+      this.setState({ pointer: true });
+    } else {
+      this.setState({ pointer: false });
+    }
+    // console.log(deltaLen);
+  };
 
   getButtonPosition = () => {
     const { value } = this.state;
@@ -117,13 +150,39 @@ class EllipseSlider extends Component<AllProps, State> {
     return position;
   };
 
+  /*
+  createAnnulusClickArea = (e: MouseEvent) => {
+    const { rx, ry, cx, cy } = this;
+    const mousePosition = getMousePosition(this.element, e);
+    const theta = getTheta(mousePosition.x, mousePosition.y) || 0;
+    const ellipsePosition = ellipsePath(theta, { rx, ry, cx, cy });
+    const lenMouse = getVectorLength(mousePosition.x, mousePosition.y);
+    const lenEllipse = getVectorLength(ellipsePosition.x, ellipsePosition.y);
+    const deltaLen = Math.abs(lenMouse - lenEllipse);
+    if (deltaLen < 10) {
+      this.setState({ pointer: true });
+    } else {
+      this.setState({ pointer: false });
+    }
+    console.log(deltaLen);
+  };
+  */
+
   render() {
     const { classes } = this.props;
     const { width, height, stroke, strokeWidth } = this.props;
     const { rx, ry, cx, cy } = this;
     const position = this.getButtonPosition();
+    const allClassName = classNames({
+      [classes.root]: true,
+      [classes.hover]: this.state.pointer
+    });
     return (
-      <div className={classes.root} ref={e => (this.element = e)}>
+      <div
+        className={allClassName}
+        ref={e => (this.element = e)}
+        onMouseMove={this.handleMouseMove}
+      >
         <svg width={width} height={height}>
           <ellipse
             cx={cx}
