@@ -10,8 +10,10 @@ type Props = {
   width: number,
   height: number,
   name: string,
-  onBlur: Function,
-  value: number
+  value: number,
+  defaultValue: number,
+  min: number,
+  max: number
 };
 
 type EllipseOption = {
@@ -99,7 +101,10 @@ class EllipseSlider extends Component<AllProps, State> {
     width: 300,
     height: 200,
     stroke: '#ccc',
-    strokeWidth: 5
+    strokeWidth: 5,
+    defaultValue: 0,
+    min: 0,
+    max: 100
   };
 
   state = {
@@ -114,12 +119,41 @@ class EllipseSlider extends Component<AllProps, State> {
   element: ?HTMLDivElement;
 
   componentWillMount() {
-    const { width, height, strokeWidth } = this.props;
+    const {
+      width,
+      height,
+      strokeWidth,
+      value: valueProp,
+      defaultValue,
+      min
+    } = this.props;
     this.cx = width / 2;
     this.cy = height / 2;
     this.rx = width / 2 - strokeWidth;
     this.ry = height / 2 - strokeWidth;
+
+    let value = valueProp;
+    if (value === undefined) {
+      value = defaultValue || min;
+    }
+
+    this.setState({
+      value: this.resolveValue(value)
+    });
   }
+
+  resolveValue = (value: number) => {
+    const { max, min } = this.props;
+    if (value > max) {
+      return max;
+    }
+
+    if (value < min) {
+      return min;
+    }
+
+    return value;
+  };
 
   handleMouseMove = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     const { rx, ry, cx, cy } = this;
@@ -148,16 +182,18 @@ class EllipseSlider extends Component<AllProps, State> {
 
   handleClick = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     const { cx, cy } = this;
+    const { min, max } = this.props;
     const mousePosition = getMousePosition(e);
     const theta = getTheta(mousePosition.x, mousePosition.y, cx, cy);
-    const value = theta / Math.PI * 180;
+    const value = theta / (Math.PI * 2) * (max - min);
     this.setState({ value });
   };
 
   getButtonPosition = (value: ?number) => {
-    let curValue = value || this.state.value;
+    const curValue = value || this.state.value;
+    const { min, max } = this.props;
     const { cx, cy, rx, ry } = this;
-    const theta = curValue * Math.PI * 2 / 360;
+    const theta = curValue / (max - min) * Math.PI * 2;
     const position = ellipsePath(theta, { cx, cy, rx, ry });
     return position;
   };
@@ -219,6 +255,7 @@ class EllipseSlider extends Component<AllProps, State> {
             );
           }}
         </Motion>
+        {/* <input type="hidden" name={name} value={value} /> */}
       </div>
     );
   }
