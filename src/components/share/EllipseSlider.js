@@ -2,12 +2,16 @@
 import React, { Component } from 'react';
 import injectSheet from 'react-jss';
 import classNames from 'classnames';
+import { Motion, spring } from 'react-motion';
 import Sunny from 'react-icons/lib/md/wb-sunny';
 
 type Props = {
   classes: Object,
   width: number,
-  height: number
+  height: number,
+  name: string,
+  onBlur: Function,
+  value: number
 };
 
 type EllipseOption = {
@@ -142,10 +146,18 @@ class EllipseSlider extends Component<AllProps, State> {
     // console.log(deltaLen);
   };
 
-  getButtonPosition = () => {
-    const { value } = this.state;
+  handleClick = (e: SyntheticMouseEvent<HTMLDivElement>) => {
+    const { cx, cy } = this;
+    const mousePosition = getMousePosition(e);
+    const theta = getTheta(mousePosition.x, mousePosition.y, cx, cy);
+    const value = theta / Math.PI * 180;
+    this.setState({ value });
+  };
+
+  getButtonPosition = (value: ?number) => {
+    let curValue = value || this.state.value;
     const { cx, cy, rx, ry } = this;
-    const theta = value * Math.PI * 2 / 360;
+    const theta = curValue * Math.PI * 2 / 360;
     const position = ellipsePath(theta, { cx, cy, rx, ry });
     return position;
   };
@@ -172,7 +184,6 @@ class EllipseSlider extends Component<AllProps, State> {
     const { classes } = this.props;
     const { width, height, stroke, strokeWidth } = this.props;
     const { rx, ry, cx, cy } = this;
-    const position = this.getButtonPosition();
     const allClassName = classNames({
       [classes.root]: true,
       [classes.hover]: this.state.pointer
@@ -182,6 +193,7 @@ class EllipseSlider extends Component<AllProps, State> {
         className={allClassName}
         ref={e => (this.element = e)}
         onMouseMove={this.handleMouseMove}
+        onClick={this.handleClick}
       >
         <svg width={width} height={height}>
           <ellipse
@@ -194,12 +206,19 @@ class EllipseSlider extends Component<AllProps, State> {
             strokeWidth={strokeWidth}
           />
         </svg>
-        <div
-          className={classes.button}
-          style={{ top: `${position.y}`, left: `${position.x}` }}
-        >
-          <Sunny />
-        </div>
+        <Motion style={{ value: spring(this.state.value) }}>
+          {({ value }) => {
+            const position = this.getButtonPosition(value);
+            return (
+              <div
+                className={classes.button}
+                style={{ left: `${position.x}`, top: `${position.y}` }}
+              >
+                <Sunny />
+              </div>
+            );
+          }}
+        </Motion>
       </div>
     );
   }
