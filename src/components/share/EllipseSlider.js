@@ -184,7 +184,8 @@ class EllipseSlider extends Component<AllProps, State> {
     const { cx, cy } = this;
     const { min, max } = this.props;
     const mousePosition = getMousePosition(e);
-    const theta = getTheta(mousePosition.x, mousePosition.y, cx, cy);
+    let theta = getTheta(mousePosition.x, mousePosition.y, cx, cy);
+    theta = theta < 0 ? theta + Math.PI * 2 : theta;
     const value = theta / (Math.PI * 2) * (max - min);
     this.setState({ value });
   };
