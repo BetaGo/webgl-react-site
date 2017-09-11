@@ -29,7 +29,7 @@ type AllProps = EllipseOption & Props;
 
 type State = {
   value: number,
-  pointer: boolean
+  hovered: boolean
 };
 
 /**
@@ -43,7 +43,7 @@ const ellipsePath = (
 ) => {
   // 世界坐标系为 x轴向下
   // 椭圆坐标系为 x轴向上
-  // θ(theta): 以椭圆圆心为坐标轴原点, 椭圆上的任意一点到圆心的直线 与 坐标轴x轴 的夹角.
+  // θ(theta)(弧度): 以椭圆圆心为坐标轴原点, 椭圆上的任意一点到圆心的直线 与 坐标轴x轴 的夹角.
   let x = cx + rx * Math.cos(theta);
   let y = cy - ry * Math.sin(theta);
   return { x, y };
@@ -91,7 +91,7 @@ const styles = {
     fontSize: '36px',
     transform: 'translate(-50%, -50%)'
   },
-  hover: {
+  hovered: {
     cursor: 'pointer'
   }
 };
@@ -99,7 +99,7 @@ const styles = {
 class EllipseSlider extends Component<AllProps, State> {
   static defaultProps = {
     width: 300,
-    height: 200,
+    height: 300,
     stroke: '#ccc',
     strokeWidth: 5,
     defaultValue: 0,
@@ -109,7 +109,8 @@ class EllipseSlider extends Component<AllProps, State> {
 
   state = {
     value: 90,
-    pointer: false
+    hovered: false,
+    mousePosition: { x: 0, y: 0 }
   };
 
   cx: number;
@@ -158,24 +159,33 @@ class EllipseSlider extends Component<AllProps, State> {
   handleMouseMove = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     const { rx, ry, cx, cy } = this;
     const mousePosition = getMousePosition(e);
+    this.setState({ mousePosition });
     // console.log(`mousePosition: ${JSON.stringify(mousePosition)}`);
     const theta = getTheta(mousePosition.x, mousePosition.y, cx, cy);
-    // console.log(`theta: ${theta}`)
+    console.log(`theta: ${theta / Math.PI * 180}`);
     const ellipsePosition = ellipsePath(theta, { rx, ry, cx, cy });
     // console.log(`ellipsePosition: ${JSON.stringify(ellipsePosition)}`);
     const lenMouse = getVectorLength(
       mousePosition.x - cx,
       cy - mousePosition.y
     );
+    console.log(
+      `mousePositionE: x:${mousePosition.x - cx}, y:${cy - mousePosition.y}`
+    );
     const lenEllipse = getVectorLength(
       ellipsePosition.x - cx,
       cy - ellipsePosition.y
     );
+    console.log(
+      `ellipsePositionE: x:${ellipsePosition.x - cx}, y:${cy -
+        ellipsePosition.y}`
+    );
     const deltaLen = Math.abs(lenMouse - lenEllipse);
+    // console.log(`deltaLen: ${deltaLen}`);
     if (deltaLen < 18) {
-      this.setState({ pointer: true });
+      this.setState({ hovered: true });
     } else {
-      this.setState({ pointer: false });
+      this.setState({ hovered: false });
     }
     // console.log(deltaLen);
   };
@@ -209,9 +219,9 @@ class EllipseSlider extends Component<AllProps, State> {
     const lenEllipse = getVectorLength(ellipsePosition.x, ellipsePosition.y);
     const deltaLen = Math.abs(lenMouse - lenEllipse);
     if (deltaLen < 10) {
-      this.setState({ pointer: true });
+      this.setState({ hovered: true });
     } else {
-      this.setState({ pointer: false });
+      this.setState({ hovered: false });
     }
     console.log(deltaLen);
   };
@@ -223,8 +233,9 @@ class EllipseSlider extends Component<AllProps, State> {
     const { rx, ry, cx, cy } = this;
     const allClassName = classNames({
       [classes.root]: true,
-      [classes.hover]: this.state.pointer
+      [classes.hovered]: this.state.hovered
     });
+
     return (
       <div
         className={allClassName}
@@ -241,6 +252,13 @@ class EllipseSlider extends Component<AllProps, State> {
             fill="transparent"
             stroke={stroke}
             strokeWidth={strokeWidth}
+          />
+          <line
+            x1={cx}
+            x2={this.state.mousePosition.x}
+            y1={cy}
+            y2={this.state.mousePosition.y}
+            stroke="#0f0"
           />
         </svg>
         <Motion style={{ value: spring(this.state.value) }}>
