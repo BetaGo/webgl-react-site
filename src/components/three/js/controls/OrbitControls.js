@@ -13,7 +13,8 @@
 //    Orbit - left mouse / touch: one finger move
 //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 //    Pan - right mouse, or arrow keys / touch: three finger swipe
-module.exports = function enhanceTHREE(THREE) {
+export default function enhanceTHREE(originalThree) {
+  const THREE = Object.assign({}, originalThree);
   THREE.OrbitControls = function(object, domElement) {
     this.object = object;
 
@@ -964,4 +965,5 @@ module.exports = function enhanceTHREE(THREE) {
       }
     }
   });
-};
+  return THREE;
+}

@@ -1,5 +1,8 @@
 // @flow
-const THREE = require('three');
+import * as originalThree from 'three';
+import orbitControlEnhancer from '../js/controls/OrbitControls';
+
+const THREE = orbitControlEnhancer(originalThree);
 
 type config = {
   element: HTMLElement,
@@ -42,7 +45,7 @@ export default function createModel({
 
     // 控制器
     if (isControllable) {
-      require('../js/controls/OrbitControls')(THREE);
+      // require('../js/controls/OrbitControls')(THREE);
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.addEventListener('change', render);
     }
