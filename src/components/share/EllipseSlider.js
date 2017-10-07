@@ -241,7 +241,7 @@ class EllipseSlider extends Component<AllProps, State> {
         className={allClassName}
         ref={e => (this.element = e)}
         onMouseMove={this.handleMouseMove}
-        onClick={this.handleClick}
+        onClick={this.state.hovered ? this.handleClick : null}
       >
         <svg width={width} height={height}>
           <ellipse
